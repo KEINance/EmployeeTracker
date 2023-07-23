@@ -1,5 +1,6 @@
 const inquirer = require("inquirer");
 const connection = require('./config/connection.js');
+const { start } = require("repl");
 
 function startApp() {
     inquirer.prompt([
@@ -83,7 +84,7 @@ function addDepartment() {
 ]
 .then(function(data) {
   connection.query('INSERT INTO department SET ?', {
-      department_title: answers.title
+      department_title: data.title
       }, function(err) {
           if (err) {
             console.log(err);
@@ -91,7 +92,7 @@ function addDepartment() {
           } else {
             addAlert("Department sucessfully added to database!");
           }
-          addDepartment();
+          startApp();
         });
     })
     .catch((err) => {
@@ -131,7 +132,7 @@ function addRole() {
           } else {
             addAlert("Role sucessfully added to database!");
           }
-          addRole();
+          startApp();
         });
     })
     .catch((err) => {
@@ -186,6 +187,15 @@ function addEmployee() {
   )
 };
 
+
+
+
+
+
+
+
+
+
 function updateEmployee() {
 //select employee from list
   connection.query('SELECT * FROM employees', (err, res) => {
@@ -210,11 +220,17 @@ for(const data of res) {
         name: 'chooseEmployee',
         message: 'Please, choose employee for role change.',
         choices: employeeChoices
+        // ['employeeChoices', 'Exit']
       }
     ])
     .then((answers) => {
       const employeeChoosen = res.find(employee => `${employee.first_name} ${employee.last_name}` === answers.chooseEmployee);
       const roleChoices = [];
+      connection.query('SELECT * FROM role', (err, res) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
       for(const data of res) {
         roleChoices.push(data.title);
       }
@@ -235,6 +251,7 @@ connection.query('UPDATE employees SET role_id = ? WHERE id = ?', [roleSelected.
       console.log(err);
     } else {      
   console.log(`${employeeChoosen.first_name} ${employeeChoosen.last_name}'s role has been effectively changed to ${roleSelected}`);
+  startApp();
     }
   });
 })
@@ -243,6 +260,6 @@ connection.query('UPDATE employees SET role_id = ? WHERE id = ?', [roleSelected.
       })
     })
   })
-}
+})};
 
 startApp();
