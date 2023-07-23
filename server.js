@@ -179,7 +179,7 @@ function addEmployee(employees) {
 ])
 //collects new employee data
 .then(function(data) {
-  const { managementId} = employees.find(({ firstname }) => firstname === data.managerTitle);
+  const { managementId} = employees.find(({ firstname, lastname }) => firstname, lastname === data.managerTitle);
   const { roleId }  = role.find(({ name }) => name === data.role); 
 
 
