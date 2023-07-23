@@ -98,31 +98,29 @@ function addDepartment(department) {
   }
 ])
 .then(function(data) {
-//   connection.query('SELECT * FROM department', (err, name) => {
-//     if (err) {
-//       console.log(err);
-//       return;
-//     };
-//   const { id }  = name.find(({ name }) => name === data.department); 
 
-//   const departmentToAdd = {
-//     department_title: id
-// };
-
-console.log(addDepartment);
-
-  connection.query('INSERT INTO department SET ?', data.title, function(err) {
+  connection.query('INSERT INTO department (name) VALUES (?)', data.title, function(err) {
           if (err) {
             console.log(err);
             console.log('Department not able to be added to database.')
           } else {
-            addAlert("Department sucessfully added to database!");
+            console.log("Department sucessfully added to database!");
           }
-          addDepartment(department);
           startApp();
         });
     })
-  }
+  };
+
+
+
+
+
+
+
+
+
+
+
 
 function addRole(role) {
     inquirer.prompt([
@@ -156,7 +154,7 @@ function addRole(role) {
       salary: data.salary,
       department_id: id
     }
-// console.log(employeeToAdd);
+console.log(roleToAdd);
 //places new info into new employee for employee table
   connection.query('INSERT INTO employees SET ?', roleToAdd, function(err) {
     if (err) {
