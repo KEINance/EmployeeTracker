@@ -73,7 +73,7 @@ function viewEmployees() {
 };
 
 function addDepartment() {
-  connection.query('SELECT * FROM department', err) 
+  connection.query('SELECT * FROM department') 
   inquirer.prompt([
   {
     name: "title",
@@ -118,7 +118,7 @@ function addRole() {
     type: "input",
     message: "Please, enter what department id."
   }
-]
+])
 .then(function(data) {
   connection.query('INSERT INTO roles SET ?', {
       title: data.title,
@@ -127,7 +127,7 @@ function addRole() {
       }, function(err) {
           if (err) {
             console.log(err);
-            console.log('Role not able to be added to database.')
+            console.log('Role not able to be added to database.');
           } else {
             addAlert("Role sucessfully added to database!");
           }
@@ -137,7 +137,6 @@ function addRole() {
     .catch((err) => {
       console.log(err);
     })
-  )
 };
 
 function addEmployee() {
@@ -188,32 +187,62 @@ function addEmployee() {
 };
 
 function updateEmployee() {
-  connection.query('SELECT * FROM employee') 
-  inquirer.prompt([
-  {
-    name: "whichRole",
-    type: "list",
-    message: "Which role would you like to update?",
-    choices: results.map(employee => employee.role)
-  },
-])
-.then(function(data) {
-  connection.query('UPDATE employee SET ? WHERE?', 
-  {
-    roles: data.whichRole
-  }, function(err, result) {
-          if (err) {
-            console.log(err);
-            console.log('Employee not able to be updated.')
-          } else {
-            addAlert("Employee sucessfully updated in database!");
-          }
-          updateEmployee();
-        })
-})
-      .catch((err) => {
+//select employee from list
+  connection.query('SELECT * FROM employees', (err, res) => {
+    if (err) {
       console.log(err);
+      return;
+    }
+// //check things show up properly
+//     console.log('Employee List:');
+//     for (const employee of res) {
+//       console.log(`${employee.first_name} ${employee.last_name}`)
+
+//array for choices
+const employeeChoices = [];
+for(const data of res) {
+  employeeChoices.push(`${data.first_name} ${data.last_name}`);
+}
+//prompt to choose which employee to update
+    inquirer.prompt ([
+      {
+        type: 'list',
+        name: 'chooseEmployee',
+        message: 'Please, choose employee for role change.',
+        choices: employeeChoices
+      }
+    ])
+    .then((answers) => {
+      const employeeChoosen = res.find(employee => `${employee.first_name} ${employee.last_name}` === answers.chooseEmployee);
+      const roleChoices = [];
+      for(const data of res) {
+        roleChoices.push(data.title);
+      }
+        inquirer.prompt([
+          {
+            type: 'list',
+            name: 'chooseRole',
+            message: "Please, select new role.",
+            choices: roleChoices
+          }
+        ])
+        .then((answers) => {
+          const roleSelected = answers.chooseRole;
+// check for proper render
+// console.log(`Role Updated ${employeeChoosen.first_name} ${employeeChoosen.last_name}'s role has been effectively changed to ${roleSelected}`)
+connection.query('UPDATE employees SET role_id = ? WHERE id = ?', [roleSelected.id, employeeChoosen.id], (err, res) => {
+    if (err) {
+      console.log(err);
+    } else {      
+  console.log(`${employeeChoosen.first_name} ${employeeChoosen.last_name}'s role has been effectively changed to ${roleSelected}`);
+    }
+  });
+})
+  .catch((err) => {
+        console.log(err);
+      })
     })
-};
+  })
+}
 
 startApp();
