@@ -73,74 +73,150 @@ function viewEmployees() {
     })
 };
 
-function addDepartment() {
-  connection.query('SELECT * FROM department') 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function addDepartment(department) {
   inquirer.prompt([
   {
     name: "title",
     type: "input",
-    message: "Please, enter department title."
+    message: "Please, enter new department title."
   }
-]
+])
 .then(function(data) {
-  connection.query('INSERT INTO department SET ?', {
-      department_title: data.title
-      }, function(err) {
+//   connection.query('SELECT * FROM department', (err, name) => {
+//     if (err) {
+//       console.log(err);
+//       return;
+//     };
+//   const { id }  = name.find(({ name }) => name === data.department); 
+
+//   const departmentToAdd = {
+//     department_title: id
+// };
+
+  connection.query('INSERT INTO department SET ?', data.title, function(err) {
           if (err) {
             console.log(err);
             console.log('Department not able to be added to database.')
           } else {
             addAlert("Department sucessfully added to database!");
           }
+          addDepartment(department);
           startApp();
         });
     })
-    .catch((err) => {
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function addRole(role) {
+    inquirer.prompt([
+      {
+        name: "title",
+        type: "input",
+        message: "Please, enter new role title."
+      },
+      {
+        name: "salary",
+        type: "input",
+        message: "Please, enter salary for this role."
+      },
+      {
+        name: "department",
+        type: "input",
+        message: "Please, enter what department id."
+      }
+    ])
+//collects new employee data
+.then(function(data) {
+  connection.query('SELECT * FROM role', (err, res) => {
+    if (err) {
       console.log(err);
+      return;
+    };
+  const { id }  = res.find(({ department_id }) => department_id === data.role); 
+
+  const roleToAdd = {
+      title: data.title,
+      salary: data.salary,
+      department_id: id
+    }
+// console.log(employeeToAdd);
+//places new info into new employee for employee table
+  connection.query('INSERT INTO employees SET ?', roleToAdd, function(err) {
+    if (err) {
+      console.log(err);
+      console.log('Role not able to be added to database.')
+    } else {
+      console.log("Role sucessfully added to database!");
+    }
+    addRole(role);
+    startApp();
+      })
     })
-  )
+  }) 
 };
 
-function addRole() {
-  connection.query('SELECT * FROM role', (err, res) => { 
-  inquirer.prompt([
-  {
-    name: "title",
-    type: "input",
-    message: "Please, enter new role title."
-  },
-  {
-    name: "salary",
-    type: "input",
-    message: "Please, enter salary for this role."
-  },
-  {
-    name: "department",
-    type: "input",
-    message: "Please, enter what department id."
-  }
-])
-.then(function(data) {
-  const newRole = {
-    title: data.title,
-    salary: data.salary,
-    department_id: data.department
-  }
-  connection.query('INSERT INTO role SET ?', newRole, function(err) {
-          if (err) {
-            console.log(err);
-            console.log('Role not able to be added to database.');
-          } else {
-            addAlert("Role sucessfully added to database!");
-          }
-          startApp();
-        });
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-})
-};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -148,11 +224,11 @@ function addRole() {
 
 
 function addEmployee(employees) {
-  // connection.query('SELECT * FROM role', (err, res) => {
-  //   if (err) {
-  //     console.log(err);
-  //     return;
-  //   }
+  connection.query('SELECT * FROM role', (err, role) => {
+    if (err) {
+      console.log(err);
+      return;
+    };
     inquirer.prompt([
       {
         name: "firstname",
@@ -184,14 +260,14 @@ function addEmployee(employees) {
       console.log(err);
       return;
     };
-  const { managementId } = employees.find(({ first_name }) => first_name === data.managerTitle);
-  const { roleId }  = role.find(({ name }) => name === data.role); 
+  const { managementId } = res.find(({ first_name }) => first_name === data.managerTitle);
+  const { id }  = role.find(({ title }) => title === data.role); 
 
   const employeeToAdd = {
   first_name: data.firstname,
   last_name: data.lastname,
   manager_id: managementId,
-  role_id: roleId
+  role_id: id
 };
 
 // console.log(employeeToAdd);
@@ -201,34 +277,15 @@ function addEmployee(employees) {
       console.log(err);
       console.log('Employee not able to be added to database.')
     } else {
-      addAlert("Employee sucessfully added to database!");
+      console.log("Employee sucessfully added to database!");
     }
     addEmployee(employees)
     startApp();
-  });
-})
-.catch((err) => {
-  console.log(err);
+      })
     })
   }) 
+})
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function updateEmployee() {
 //select employee from list
