@@ -73,6 +73,11 @@ function viewEmployees() {
 };
 
 function addDepartment() {
+  inquirer.prompt([
+    {
+      department_title: input,
+    }
+  ]);
     connection.query('SELECT * FROM department', (err, res) => {
         if (err) throw err 
         console.table(res)
@@ -80,18 +85,63 @@ function addDepartment() {
     })
 };
 function addRole() {
+  inquirer.prompt([
+    {
+      title: input,
+      salary: input,
+      department_id: input,
+    }
+  ]);
     connection.query('SELECT * FROM role', (err, res) => {
         if (err) throw err 
         console.table(res)
         startApp()
     })
 };
+
 function addEmployee() {
-    connection.query('SELECT * FROM employee', (err, res) => {
-        if (err) throw err 
+  connection.query('SELECT * FROM roles', err) 
+  inquirer.prompt([
+  {
+    name: "firstname",
+    type: "input",
+    message: "Please, enter employees first name."
+  },
+  {
+    name: "lastname",
+    type: "input",
+    message: "Please, enter employees last name."
+  },
+  {
+    name: "managerTitle",
+    type: "input",
+    message: "Please, enter employees superior."
+  },
+  {
+    name: "role",
+    type: "choice",
+    message: "Please, enter employees role.",
+    choices: ['engineer', 'management', 'legal']
+  },
+]);
+.then(function(data) {
+  connection.query('INSERT INTO employee', {
+      first_name: answers.firstname,
+      last_name: answers.lastname,
+      manager_id: answers.managerTitle,
+      roles: selected.roles
+    }), 
+    try {
+      addAlert("Employee sucessfully added to database!");
+    }
+    catch((err) => {
+      console.log(err);
+      console.log('Employee not able to be added to database.')
+    }); 
         console.table(res)
-        startApp()
-    })
+        addEmployee()
+    }
+  )
 };
 
 //add upadte ability and plug into sequal query
@@ -106,9 +156,9 @@ function employeeUpdate() {
           choices: [
             "Update employee managers",
             "Exit"
-          ]
+          ],
 }]);
-    connection.query('SELECT * FROM updated', (err, res) => {
+    connection.query('SELECT * FROM employee', (err, res) => {
         if (err) throw err 
         console.table(res)
         startApp()
