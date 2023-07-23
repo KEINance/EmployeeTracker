@@ -148,11 +148,11 @@ function addRole() {
 
 
 function addEmployee(employees) {
-  connection.query('SELECT * FROM role', (err, res) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
+  // connection.query('SELECT * FROM role', (err, res) => {
+  //   if (err) {
+  //     console.log(err);
+  //     return;
+  //   }
     inquirer.prompt([
       {
         name: "firstname",
@@ -168,20 +168,24 @@ function addEmployee(employees) {
     name: "managerTitle",
     type: "list",
     message: "Please, choose employees superior.",
-    choices: ['Joe', 'Jane']
+    choices: ['John', 'Jane']
   },
   {
     name: "role",
     type: "list",
     message: "Please, choose employees role.",
-    choices: ['Engineer', 'Management', 'Legal']
+    choices: ['engineer', 'management', 'legal']
   },
 ])
 //collects new employee data
 .then(function(data) {
-  const { managementId} = employees.find(({ firstname, lastname }) => firstname, lastname === data.managerTitle);
+  connection.query('SELECT * FROM employees', (err, res) => {
+    if (err) {
+      console.log(err);
+      return;
+    };
+  const { managementId } = employees.find(({ first_name }) => first_name === data.managerTitle);
   const { roleId }  = role.find(({ name }) => name === data.role); 
-
 
   const employeeToAdd = {
   first_name: data.firstname,
