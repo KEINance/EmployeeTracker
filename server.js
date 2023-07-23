@@ -39,7 +39,7 @@ function startApp() {
             addEmployee();
             break;
           case "Update employee roles":
-            employeeUpdate();
+            updateEmployee();
             break;
           case "Exit":
             connection.end();
@@ -73,30 +73,71 @@ function viewEmployees() {
 };
 
 function addDepartment() {
+  connection.query('SELECT * FROM department', err) 
   inquirer.prompt([
-    {
-      department_title: input,
-    }
-  ]);
-    connection.query('SELECT * FROM department', (err, res) => {
-        if (err) throw err 
-        console.table(res)
-        startApp()
+  {
+    name: "title",
+    type: "input",
+    message: "Please, enter department title."
+  }
+]
+.then(function(data) {
+  connection.query('INSERT INTO department SET ?', {
+      department_title: answers.title
+      }, function(err) {
+          if (err) {
+            console.log(err);
+            console.log('Department not able to be added to database.')
+          } else {
+            addAlert("Department sucessfully added to database!");
+          }
+          addDepartment();
+        });
     })
+    .catch((err) => {
+      console.log(err);
+    })
+  )
 };
+
 function addRole() {
+  connection.query('SELECT * FROM roles', err) 
   inquirer.prompt([
-    {
-      title: input,
-      salary: input,
-      department_id: input,
-    }
-  ]);
-    connection.query('SELECT * FROM role', (err, res) => {
-        if (err) throw err 
-        console.table(res)
-        startApp()
+  {
+    name: "title",
+    type: "input",
+    message: "Please, enter new role title."
+  },
+  {
+    name: "salary",
+    type: "input",
+    message: "Please, enter salary for this role."
+  },
+  {
+    name: "department",
+    type: "input",
+    message: "Please, enter what department id."
+  }
+]
+.then(function(data) {
+  connection.query('INSERT INTO roles SET ?', {
+      title: answers.title,
+      salary: answers.salary,
+      department_id: answers.department
+      }, function(err) {
+          if (err) {
+            console.log(err);
+            console.log('Role not able to be added to database.')
+          } else {
+            addAlert("Role sucessfully added to database!");
+          }
+          addRole();
+        });
     })
+    .catch((err) => {
+      console.log(err);
+    })
+  )
 };
 
 function addEmployee() {
@@ -123,45 +164,55 @@ function addEmployee() {
     message: "Please, enter employees role.",
     choices: ['engineer', 'management', 'legal']
   },
-]);
+]
 .then(function(data) {
-  connection.query('INSERT INTO employee', {
+  connection.query('INSERT INTO employee SET ?', {
       first_name: answers.firstname,
       last_name: answers.lastname,
       manager_id: answers.managerTitle,
-      roles: selected.roles
-    }), 
-    try {
-      addAlert("Employee sucessfully added to database!");
-    }
-    catch((err) => {
+      roles: data.role
+      }, function(err) {
+          if (err) {
+            console.log(err);
+            console.log('Employee not able to be added to database.')
+          } else {
+            addAlert("Employee sucessfully added to database!");
+          }
+          addEmployee();
+        });
+    })
+    .catch((err) => {
       console.log(err);
-      console.log('Employee not able to be added to database.')
-    }); 
-        console.table(res)
-        addEmployee()
-    }
+    })
   )
 };
 
-//add upadte ability and plug into sequal query
-// make prompt
-function employeeUpdate() {
-    //add update prompt in here
-    inquirer.prompt([
-        {
-          name: "action",
-          type: "list",
-          message: "What would you like to update?",
-          choices: [
-            "Update employee managers",
-            "Exit"
-          ],
-}]);
-    connection.query('SELECT * FROM employee', (err, res) => {
-        if (err) throw err 
-        console.table(res)
-        startApp()
+function updateEmployee() {
+  connection.query('SELECT * FROM employee') 
+  inquirer.prompt([
+  {
+    name: "whichRole",
+    type: "list",
+    message: "Which role would you like to update?",
+    choices: results.map(employee => employee.role)
+  },
+])
+.then(function(data) {
+  connection.query('UPDATE employee SET ? WHERE?', 
+  {
+    roles: data.whichRole
+  }, function(err, result) {
+          if (err) {
+            console.log(err);
+            console.log('Employee not able to be updated.')
+          } else {
+            addAlert("Employee sucessfully updated in database!");
+          }
+          updateEmployee();
+        })
+})
+      .catch((err) => {
+      console.log(err);
     })
 };
 
