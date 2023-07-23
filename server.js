@@ -101,7 +101,7 @@ function addDepartment() {
 };
 
 function addRole() {
-  connection.query('SELECT * FROM roles', err) 
+  connection.query('SELECT * FROM roles') 
   inquirer.prompt([
   {
     name: "title",
@@ -121,9 +121,9 @@ function addRole() {
 ]
 .then(function(data) {
   connection.query('INSERT INTO roles SET ?', {
-      title: answers.title,
-      salary: answers.salary,
-      department_id: answers.department
+      title: data.title,
+      salary: data.salary,
+      department_id: data.department
       }, function(err) {
           if (err) {
             console.log(err);
@@ -141,7 +141,7 @@ function addRole() {
 };
 
 function addEmployee() {
-  connection.query('SELECT * FROM roles', err) 
+  connection.query('SELECT * FROM roles') 
   inquirer.prompt([
   {
     name: "firstname",
@@ -167,9 +167,9 @@ function addEmployee() {
 ]
 .then(function(data) {
   connection.query('INSERT INTO employee SET ?', {
-      first_name: answers.firstname,
-      last_name: answers.lastname,
-      manager_id: answers.managerTitle,
+      first_name: data.firstname,
+      last_name: data.lastname,
+      manager_id: data.managerTitle,
       roles: data.role
       }, function(err) {
           if (err) {

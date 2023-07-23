@@ -32,10 +32,15 @@ THEN I am prompted to select an employee to update and their new role and this i
 
 The following video shows an example of the application being used from the command line:
 
-[![A video thumbnail shows the command-line employee management application with a play button overlaying the view.](./Assets/12-sql-homework-video-thumbnail.png)](https://2u-20.wistia.com/medias/2lnle7xnpk)
+[![A video thumbnail shows the command-line employee management application with a play button overlaying the view.](./Assets/employeeTrackerimg.png)]
 
 ##
 GitHub Link:
 https://github.com/KEINance/EmployeeTracker
 
 Deployed Link:
+https://keinance.github.io/EmployeeTracker/ 
+
+## CREDITS
+
+Thank yous to ASKBCS, tutor, and google for help with the coding and error debugging.
