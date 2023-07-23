@@ -109,6 +109,8 @@ function addDepartment(department) {
 //     department_title: id
 // };
 
+console.log(addDepartment);
+
   connection.query('INSERT INTO department SET ?', data.title, function(err) {
           if (err) {
             console.log(err);
@@ -121,19 +123,6 @@ function addDepartment(department) {
         });
     })
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function addRole(role) {
     inquirer.prompt([
@@ -182,42 +171,6 @@ function addRole(role) {
     })
   }) 
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -286,6 +239,7 @@ function addEmployee(employees) {
   }) 
 })
 };
+
 
 function updateEmployee() {
 //select employee from list
