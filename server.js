@@ -140,15 +140,23 @@ function addRole() {
     })
 };
 
+
+
+
+
 function addEmployee() {
-  connection.query('SELECT * FROM roles') 
-  inquirer.prompt([
-  {
-    name: "firstname",
-    type: "input",
-    message: "Please, enter employees first name."
-  },
-  {
+  connection.query('SELECT * FROM role', (err, res) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    inquirer.prompt([
+      {
+        name: "firstname",
+        type: "input",
+        message: "Please, enter employees first name."
+      },
+      {
     name: "lastname",
     type: "input",
     message: "Please, enter employees last name."
@@ -164,27 +172,30 @@ function addEmployee() {
     message: "Please, enter employees role.",
     choices: ['engineer', 'management', 'legal']
   },
-]
+])
 .then(function(data) {
-  connection.query('INSERT INTO employee SET ?', {
-      first_name: data.firstname,
-      last_name: data.lastname,
-      manager_id: data.managerTitle,
-      roles: data.role
-      }, function(err) {
-          if (err) {
-            console.log(err);
-            console.log('Employee not able to be added to database.')
-          } else {
-            addAlert("Employee sucessfully added to database!");
-          }
-          addEmployee();
-        });
-    })
-    .catch((err) => {
+  const employeeToAdd = {
+  first_name: data.firstname,
+  last_name: data.lastname,
+  manager_id: data.managerTitle,
+  roles: data.role
+};
+
+  connection.query('INSERT INTO employee SET employees = ? WHERE employees = ?', employeeToAdd, (err, res) => {
+  }, function(err) {
+    if (err) {
       console.log(err);
+      console.log('Employee not able to be added to database.')
+    } else {
+      addAlert("Employee sucessfully added to database!");
+    }
+    startApp();
+  });
+})
+.catch((err) => {
+  console.log(err);
     })
-  )
+  }) 
 };
 
 
