@@ -32,3 +32,7 @@ INSERT INTO employees(first_name, last_name, manager_id, role_id)
 VALUES('John', 'Doe', NULL, 2),('Jane', 'Doe', 1, 1), ('Millie', 'Jonhns', 2, 3);
 ALTER TABLE employees SET role WHERE role_id;
 
+-- ◦ name: What the user sees in the prompt (the manager’s name or role title
+-- ◦ value: The actual id value the employee or role has in its respective table
+-- ◦ The user will select by name but the value (id) is what will actually get 
+-- saved to the data object to get inserted into the database with the new employee

@@ -102,7 +102,7 @@ function addDepartment() {
 };
 
 function addRole() {
-  connection.query('SELECT * FROM roles') 
+  connection.query('SELECT * FROM role', (err, res) => { 
   inquirer.prompt([
   {
     name: "title",
@@ -121,11 +121,12 @@ function addRole() {
   }
 ])
 .then(function(data) {
-  connection.query('INSERT INTO roles SET ?', {
-      title: data.title,
-      salary: data.salary,
-      department_id: data.department
-      }, function(err) {
+  const newRole = {
+    title: data.title,
+    salary: data.salary,
+    department_id: data.department
+  }
+  connection.query('INSERT INTO role SET ?', newRole, function(err) {
           if (err) {
             console.log(err);
             console.log('Role not able to be added to database.');
@@ -138,13 +139,15 @@ function addRole() {
     .catch((err) => {
       console.log(err);
     })
+})
 };
 
 
 
 
 
-function addEmployee() {
+
+function addEmployee(employees) {
   connection.query('SELECT * FROM role', (err, res) => {
     if (err) {
       console.log(err);
@@ -163,32 +166,40 @@ function addEmployee() {
   },
   {
     name: "managerTitle",
-    type: "input",
-    message: "Please, enter employees superior."
+    type: "list",
+    message: "Please, choose employees superior.",
+    choices: ['Joe', 'Jane']
   },
   {
     name: "role",
-    type: "choice",
-    message: "Please, enter employees role.",
-    choices: ['engineer', 'management', 'legal']
+    type: "list",
+    message: "Please, choose employees role.",
+    choices: ['Engineer', 'Management', 'Legal']
   },
 ])
+//collects new employee data
 .then(function(data) {
+  const { managementId} = employees.find(({ firstname }) => firstname === data.managerTitle);
+  const { roleId }  = role.find(({ name }) => name === data.role); 
+
+
   const employeeToAdd = {
   first_name: data.firstname,
   last_name: data.lastname,
-  manager_id: data.managerTitle,
-  roles: data.role
+  manager_id: managementId,
+  role_id: roleId
 };
 
-  connection.query('INSERT INTO employee SET employees = ? WHERE employees = ?', employeeToAdd, (err, res) => {
-  }, function(err) {
+// console.log(employeeToAdd);
+//places new info into new employee for employee table
+  connection.query('INSERT INTO employees SET ?', employeeToAdd, function(err) {
     if (err) {
       console.log(err);
       console.log('Employee not able to be added to database.')
     } else {
       addAlert("Employee sucessfully added to database!");
     }
+    addEmployee(employees)
     startApp();
   });
 })
@@ -197,6 +208,14 @@ function addEmployee() {
     })
   }) 
 };
+
+
+
+
+
+
+
+
 
 
 
