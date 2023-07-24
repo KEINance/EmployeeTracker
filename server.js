@@ -142,33 +142,19 @@ function addRole(role) {
     ])
 //collects new employee data
 .then(function(data) {
-  connection.query('SELECT * FROM role', (err, res) => {
-    if (err) {
-      console.log(err);
-      return;
-    };
-  const { id }  = res.find(({ department_id }) => department_id === data.role); 
-
-  const roleToAdd = {
-      title: data.title,
-      salary: data.salary,
-      department_id: id
-    }
-console.log(roleToAdd);
-//places new info into new employee for employee table
-  connection.query('INSERT INTO employees SET ?', roleToAdd, function(err) {
-    if (err) {
+  connection.query('INSERT INTO role SET ?', {
+        title: data.title,
+        salary: data.salary,
+        department_id: data.department
+      }, function (err) {
       console.log(err);
       console.log('Role not able to be added to database.')
-    } else {
+
       console.log("Role sucessfully added to database!");
-    }
-    addRole(role);
+    })
     startApp();
       })
-    })
-  }) 
-};
+    }
 
 
 
@@ -230,7 +216,6 @@ function addEmployee(employees) {
     } else {
       console.log("Employee sucessfully added to database!");
     }
-    addEmployee(employees)
     startApp();
       })
     })
