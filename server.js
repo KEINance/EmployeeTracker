@@ -237,7 +237,7 @@ function addEmployee(employees) {
       })
     })
   })
-};
+}
 
 
 
