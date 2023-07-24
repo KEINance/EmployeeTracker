@@ -30,6 +30,6 @@ INSERT INTO role(title, salary, department_id)
 VALUES('engineer', 80000, 1), ('manager', 70000, 2), ('legal', 120000, 3);
 
 
-INSERT INTO employees(first_name, last_name, manager_id, role_id)
-VALUES('John', 'Doe', NULL, 2),('Jane', 'Doe', 1, 1), ('Millie', 'Jonhns', 2, 3);
+INSERT INTO employees(first_name, last_name, manager_id, role_id, job_title, departments, salaries)
+VALUES('John', 'Doe', NULL, 2, 'CEO', 'ALL', 'Too Much'),('Jane', 'Doe', 1, 1, 'engineer'. 80000), ('Millie', 'Jonhns', 2, 3, 'management', 70000);
 

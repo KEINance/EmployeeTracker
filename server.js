@@ -189,6 +189,23 @@ function addEmployee(employees) {
     message: "Please, choose employees role.",
     choices: ['engineer', 'management', 'legal']
   },
+  {
+    name: "jobTitle",
+    type: "list",
+    message: "Please, choose employees title.",
+    choices: ['engineer', 'management', 'legal']
+  },
+  {
+    name: "departments",
+    type: "list",
+    message: "Please, choose employees department.",
+    choices: ['engineer', 'management', 'legal']
+  },
+  {
+    name: "salaries",
+    type: "input",
+    message: "Please, choose employees salary.",
+  },
 ])
 //collects new employee data
 .then(function(data) {
@@ -200,28 +217,33 @@ function addEmployee(employees) {
   const { managementId } = res.find(({ first_name }) => first_name === data.managerTitle);
   const { id }  = role.find(({ title }) => title === data.role); 
 
-  const employeeToAdd = {
-  first_name: data.firstname,
-  last_name: data.lastname,
-  manager_id: managementId,
-  role_id: id
-};
-
-// console.log(employeeToAdd);
 //places new info into new employee for employee table
-  connection.query('INSERT INTO employees SET ?', employeeToAdd, function(err) {
-    if (err) {
+  connection.query('INSERT INTO employees SET ?',
+  {
+    first_name: data.firstname,
+    last_name: data.lastname,
+    manager_id: managementId,
+    role_id: id,
+    job_title: data.jobTitle,
+    departments: data.departments,
+    salaries: data.salaries
+  }, function(err) {
       console.log(err);
       console.log('Employee not able to be added to database.')
-    } else {
+
       console.log("Employee sucessfully added to database!");
-    }
+    })
     startApp();
       })
     })
-  }) 
-})
+  })
 };
+
+
+
+
+
+
 
 
 function updateEmployee() {
