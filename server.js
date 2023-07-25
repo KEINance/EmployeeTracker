@@ -267,7 +267,10 @@ function updateEmployee() {
               },
             ])
             .then((answers) => {
-              const roleSelected = answers.chooseRole;
+              const roleSelected = res.find(
+                (role) => 
+                role.title === answers.chooseRole
+              );
               // check for proper render
               // console.log(`Role Updated ${employeeChoosen.first_name} ${employeeChoosen.last_name}'s role has been effectively changed to ${roleSelected}`)
               connection.query(
