@@ -281,7 +281,7 @@ function updateEmployee() {
                     console.log(err);
                   } else {
                     console.log(
-                      `${employeeChoosen.first_name} ${employeeChoosen.last_name}'s role has been effectively changed to ${roleSelected}`
+                      `${employeeChoosen.first_name} ${employeeChoosen.last_name}'s role has been effectively changed to ${roleSelected.title}`
                     );
                     startApp();
                   }

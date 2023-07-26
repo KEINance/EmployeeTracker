@@ -44,6 +44,9 @@ https://github.com/KEINance/EmployeeTracker
 Deployed Link:
 https://keinance.github.io/EmployeeTracker/ 
 
+Walkthrough:
+https://drive.google.com/file/d/1lBIX5aagi6Y9wszbwRz72RdcRN7-vGWD/view 
+
 ## CREDITS
 
 Thank yous to ASKBCS, tutor, and google for help with the coding and error debugging.
