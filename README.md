@@ -37,7 +37,7 @@ The following video shows an example of the application being used from the comm
 
 [![A video thumbnail shows the command-line employee management application with a play button overlaying the view.](./Assets/employeeTrackerimg.png)]
 
-##
+## Links
 GitHub Link:
 https://github.com/KEINance/EmployeeTracker
 
